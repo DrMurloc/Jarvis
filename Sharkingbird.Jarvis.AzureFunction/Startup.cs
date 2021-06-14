@@ -13,7 +13,9 @@ namespace Sharkingbird.Jarvis.AzureFunction
   {
     public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
     {
-      builder.ConfigurationBuilder.AddUserSecrets<Startup>(true);
+      builder.ConfigurationBuilder
+        .AddEnvironmentVariables()
+        .AddUserSecrets<Startup>(true);
     }
 
     public override void Configure(IFunctionsHostBuilder builder)
