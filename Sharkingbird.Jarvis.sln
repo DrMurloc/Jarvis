@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharkingbird.Jarvis.WebApi"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharkingbird.Jarvis.Core.Mediation", "Sharkingbird.Jarvis.Mediation\Sharkingbird.Jarvis.Core.Mediation.csproj", "{4B028736-F468-4959-A036-1CE2A4FDAAF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharkingbird.Jarvis.AzureFunction", "Sharkingbird.Jarvis.AzureFunction\Sharkingbird.Jarvis.AzureFunction.csproj", "{D5382D7F-A5AB-4528-B739-F18B090E7AFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{4B028736-F468-4959-A036-1CE2A4FDAAF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B028736-F468-4959-A036-1CE2A4FDAAF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B028736-F468-4959-A036-1CE2A4FDAAF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5382D7F-A5AB-4528-B739-F18B090E7AFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5382D7F-A5AB-4528-B739-F18B090E7AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5382D7F-A5AB-4528-B739-F18B090E7AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5382D7F-A5AB-4528-B739-F18B090E7AFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{C3106034-D07A-4EDE-B20C-D77A3190986D} = {541C6FD9-9694-41E6-899E-29B1744E7341}
 		{CD9F59A7-59A3-4E85-A603-370241B9B59A} = {541C6FD9-9694-41E6-899E-29B1744E7341}
 		{4B028736-F468-4959-A036-1CE2A4FDAAF8} = {6AF48581-CD99-4849-A95D-EB536E72576B}
+		{D5382D7F-A5AB-4528-B739-F18B090E7AFA} = {541C6FD9-9694-41E6-899E-29B1744E7341}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04B06EEF-81A8-4D96-92C0-54F03DDAD149}
