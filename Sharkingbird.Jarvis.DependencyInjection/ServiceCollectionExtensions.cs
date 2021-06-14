@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sharkingbird.Jarvis.Core.Application;
 using Sharkingbird.Jarvis.Core.Contracts;
 using Sharkingbird.Jarvis.Infrastructure;
+using Sharkingbird.Jarvis.Infrastructure.Contracts;
 using Sharkingbird.Jarvis.Infrastructure.RecurringPayments;
 using System.Linq;
 
@@ -18,6 +19,7 @@ namespace Sharkingbird.Jarvis.DependencyInjection
         collectionParam.AddTransient(typeof(IRecurringPaymentRepository), serviceType);
       }
       return collectionParam
+        .AddSingleton<IEmailService, EmailService>()
         .AddTransient<INotificationService,TwilioNotificationService>();
     }
     public static IServiceCollection AddJarvisApplication(this IServiceCollection collectionParam)
