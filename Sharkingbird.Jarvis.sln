@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharkingbird.Jarvis.AzureFu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharkingbird.Jarvis.Core.Models", "Sharkingbird.Jarvis.Core.Models\Sharkingbird.Jarvis.Core.Models.csproj", "{C1B7FACF-9D32-4B76-842C-1D3519EB4AC7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FED4033B-A947-4335-AA5D-4EFCD03DCD86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharkingbird.Jarvis.UnitTests", "Sharkingbird.Jarvis.UnitTests\Sharkingbird.Jarvis.UnitTests.csproj", "{C9BA2D33-0830-45E5-BE8D-2F8635C4B5AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{C1B7FACF-9D32-4B76-842C-1D3519EB4AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1B7FACF-9D32-4B76-842C-1D3519EB4AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1B7FACF-9D32-4B76-842C-1D3519EB4AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9BA2D33-0830-45E5-BE8D-2F8635C4B5AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9BA2D33-0830-45E5-BE8D-2F8635C4B5AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9BA2D33-0830-45E5-BE8D-2F8635C4B5AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9BA2D33-0830-45E5-BE8D-2F8635C4B5AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +77,7 @@ Global
 		{4B028736-F468-4959-A036-1CE2A4FDAAF8} = {6AF48581-CD99-4849-A95D-EB536E72576B}
 		{D5382D7F-A5AB-4528-B739-F18B090E7AFA} = {541C6FD9-9694-41E6-899E-29B1744E7341}
 		{C1B7FACF-9D32-4B76-842C-1D3519EB4AC7} = {6AF48581-CD99-4849-A95D-EB536E72576B}
+		{C9BA2D33-0830-45E5-BE8D-2F8635C4B5AD} = {FED4033B-A947-4335-AA5D-4EFCD03DCD86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04B06EEF-81A8-4D96-92C0-54F03DDAD149}
