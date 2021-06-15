@@ -4,6 +4,7 @@ using MimeKit;
 using Sharkingbird.Jarvis.Core.Models;
 using Sharkingbird.Jarvis.Infrastructure.Abstractions;
 using Sharkingbird.Jarvis.Infrastructure.Configuration;
+using Sharkingbird.Jarvis.Infrastructure.Contracts;
 using System;
 using System.Text.RegularExpressions;
 
@@ -11,8 +12,8 @@ namespace Sharkingbird.Jarvis.Infrastructure.RecurringPayments
 {
   public sealed class VivintRecurringPaymentRepository : EmailRecurringPaymentRepository
   {
-    public VivintRecurringPaymentRepository(IOptions<EmailConfiguration> optionsParam,
-      ILogger<VivintRecurringPaymentRepository> loggerParam) : base(optionsParam, loggerParam)
+    public VivintRecurringPaymentRepository(IEmailService emailService,
+      ILogger<VivintRecurringPaymentRepository> loggerParam) : base(emailService, loggerParam)
     {
     }
 

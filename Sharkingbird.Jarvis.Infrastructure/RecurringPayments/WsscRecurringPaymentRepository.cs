@@ -4,6 +4,7 @@ using MimeKit;
 using Sharkingbird.Jarvis.Core.Models;
 using Sharkingbird.Jarvis.Infrastructure.Abstractions;
 using Sharkingbird.Jarvis.Infrastructure.Configuration;
+using Sharkingbird.Jarvis.Infrastructure.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,8 +14,8 @@ namespace Sharkingbird.Jarvis.Infrastructure.RecurringPayments
 {
   public sealed class WsscRecurringPaymentRepository : EmailRecurringPaymentRepository
   {
-    public WsscRecurringPaymentRepository(IOptions<EmailConfiguration> optionsParam,
-      ILogger<WsscRecurringPaymentRepository> loggerParam) : base(optionsParam, loggerParam)
+    public WsscRecurringPaymentRepository(IEmailService emailService,
+      ILogger<WsscRecurringPaymentRepository> loggerParam) : base(emailService, loggerParam)
     {
     }
 
