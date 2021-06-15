@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Sharkingbird.Jarvis.Core.Contracts;
 using Sharkingbird.Jarvis.Core.Mediation.Commands;
+using Sharkingbird.Jarvis.Core.Mediation.Events;
 using Sharkingbird.Jarvis.Core.Models;
 using System.Linq;
 using System.Threading;
@@ -12,14 +13,14 @@ namespace Sharkingbird.Jarvis.Core.Application
   {
     private readonly ITransactionRepository _transactionRepository;
     private readonly IBudgetRepository _budgetRepository;
-    private readonly INotificationService _notificationService;
+    private readonly IMediator _mediator;
     public ApplyRecurringTransactionsHandler(ITransactionRepository transactionRepository,
       IBudgetRepository budgetRepository,
-      INotificationService notificationService)
+      IMediator mediator)
     {
       _transactionRepository = transactionRepository;
       _budgetRepository = budgetRepository;
-      _notificationService = notificationService;
+      _mediator = mediator;
     }
     public async Task<Unit> Handle(ApplyRecurringTransactionsCommand request, CancellationToken cancellationToken)
     {
@@ -33,9 +34,7 @@ namespace Sharkingbird.Jarvis.Core.Application
           continue;
         }
         await _budgetRepository.SaveBudget(budget, cancellationToken);
-        var diff = budget.NewTransactions.Sum(b => b.Amount);
-        var names = string.Join(", ", budget.NewTransactions.Select(t => t.Description).OrderBy(d => d));
-        await _notificationService.PushNotification(new Notification($"{names} applied to {budget.Name} for ${diff}. Balance: {budget.Balance}"),cancellationToken);
+        await _mediator.Send(new TransactionsAppliedEvent(budget), cancellationToken);
       }
       return Unit.Value;
     }
