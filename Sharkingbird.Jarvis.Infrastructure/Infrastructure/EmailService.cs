@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sharkingbird.Jarvis.Infrastructure
+namespace Sharkingbird.Jarvis.Infrastructure.Infrastructure
 {
   public sealed class EmailService : IEmailService
   {
@@ -24,7 +24,7 @@ namespace Sharkingbird.Jarvis.Infrastructure
     private async Task<IMailFolder> GetInbox(CancellationToken cancellationToken)
     {
 
-      if(_inbox != null)
+      if (_inbox != null)
       {
         return _inbox;
       }
@@ -34,24 +34,24 @@ namespace Sharkingbird.Jarvis.Infrastructure
       await client.AuthenticateAsync(_configuration.UserName, _configuration.Password, cancellationToken);
 
       _inbox = client.Inbox;
-      await _inbox.OpenAsync(MailKit.FolderAccess.ReadWrite, cancellationToken);
+      await _inbox.OpenAsync(FolderAccess.ReadWrite, cancellationToken);
       return _inbox;
     }
-    public async Task<IEnumerable<(UniqueId,MimeMessage)>> SearchForMessages(SearchQuery query, CancellationToken cancellationToken)
+    public async Task<IEnumerable<(UniqueId, MimeMessage)>> SearchForMessages(SearchQuery query, CancellationToken cancellationToken)
     {
       var inbox = await GetInbox(cancellationToken);
       var existingMessages = await inbox.SearchAsync(query, cancellationToken);
-      var result = new List<(UniqueId,MimeMessage)>();
-      foreach(var id in existingMessages)
+      var result = new List<(UniqueId, MimeMessage)>();
+      foreach (var id in existingMessages)
       {
-        result.Add((id,await _inbox.GetMessageAsync(id, cancellationToken)));
+        result.Add((id, await _inbox.GetMessageAsync(id, cancellationToken)));
       }
       return result;
     }
 
     public async Task MarkAsRead(UniqueId messageId, CancellationToken cancellationToken)
     {
-      await _inbox.AddFlagsAsync(messageId, MailKit.MessageFlags.Seen, false, cancellationToken);
+      await _inbox.AddFlagsAsync(messageId, MessageFlags.Seen, false, cancellationToken);
     }
   }
 }
