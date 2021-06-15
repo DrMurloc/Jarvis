@@ -24,7 +24,7 @@ namespace Sharkingbird.Jarvis.Infrastructure
     }
     public async Task<Budget> GetBudget(BudgetNameValueType budgetName, CancellationToken cancellationToken)
     {
-      var budget = await _dbContext.Budget.FirstOrDefaultAsync(b => b.Name == budgetName,cancellationToken);
+      var budget = await _dbContext.Budget.FirstOrDefaultAsync(b => b.Name == budgetName.ToString(),cancellationToken);
       if (budget == null)
       {
         budget = new BudgetEntity
