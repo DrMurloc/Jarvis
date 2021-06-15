@@ -3,6 +3,7 @@ using Sharkingbird.Jarvis.Core.Models;
 using Sharkingbird.Jarvis.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Sharkingbird.Jarvis.UnitTests
@@ -21,7 +22,7 @@ namespace Sharkingbird.Jarvis.UnitTests
       });
 
       Assert.AreEqual(amount, budget.Balance);
-      Assert.IsTrue(budget.IsModified);
+      Assert.AreEqual(1, budget.NewTransactions.Count());
     }
 
     [TestCase("RecurringTransaction", 9.99, "Budget", RecurringRateEnum.Weekly)]
@@ -38,7 +39,7 @@ namespace Sharkingbird.Jarvis.UnitTests
       });
 
       Assert.AreEqual(amount, budget.Balance);
-      Assert.IsTrue(budget.IsModified);
+      Assert.AreEqual(1,budget.NewTransactions.Count());
     }
 
     [TestCase("RecurringTransaction", 9.99, "Budget", RecurringRateEnum.Weekly)]
@@ -54,7 +55,7 @@ namespace Sharkingbird.Jarvis.UnitTests
 
 
       Assert.AreEqual(amount, budget.Balance);
-      Assert.IsFalse(budget.IsModified);
+      Assert.AreEqual(0, budget.NewTransactions.Count());
     }
 
     [TestCase("RecurringTransaction", 9.99, "Budget")]
@@ -72,7 +73,7 @@ namespace Sharkingbird.Jarvis.UnitTests
 
 
       Assert.AreEqual(2.0 * amount, budget.Balance);
-      Assert.IsTrue(budget.IsModified);
+      Assert.AreEqual(1, budget.NewTransactions.Count());
     }
 
     [TestCase("RecurringTransaction", 9.99, "Budget")]
@@ -90,7 +91,7 @@ namespace Sharkingbird.Jarvis.UnitTests
 
 
       Assert.AreEqual(3.0 * amount, budget.Balance);
-      Assert.IsTrue(budget.IsModified);
+      Assert.AreEqual(2, budget.NewTransactions.Count());
     }
   }
 }

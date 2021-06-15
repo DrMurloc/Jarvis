@@ -24,7 +24,7 @@ namespace Sharkingbird.Jarvis.Core.Application
       foreach(var budget in budgets)
       {
         budget.ApplyRecurringTransactions(recurringPayments);
-        await _budgetRepository.SaveBudget(budget);
+        await _budgetRepository.SaveBudget(budget,cancellationToken);
       }
       return Unit.Value;
     }

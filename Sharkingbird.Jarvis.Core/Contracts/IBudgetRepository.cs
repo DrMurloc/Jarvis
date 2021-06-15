@@ -12,6 +12,6 @@ namespace Sharkingbird.Jarvis.Core.Contracts
   {
     Task<Budget> GetBudget(BudgetNameValueType budgetName, CancellationToken cancellationToken);
     Task<IEnumerable<Budget>> GetBudgets(CancellationToken cancellationToken);
-    Task SaveBudget(Budget budget);
+    Task SaveBudget(Budget budget, CancellationToken cancellationToken);
   }
 }

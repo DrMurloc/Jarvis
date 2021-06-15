@@ -12,11 +12,13 @@ namespace Sharkingbird.Jarvis.Core.Models
     {
       Name = name;
       _transactions = transactions.ToList();
+      _newTransactions = new List<Transaction>();
     }
     private List<Transaction> _transactions;
+    private List<Transaction> _newTransactions;
+    public IEnumerable<Transaction> NewTransactions => _newTransactions;
     public BudgetNameValueType Name { get;}
     public double Balance => _transactions.Sum(t => t.Amount);
-    public bool IsModified { get; private set; } = false;
     public void ApplyRecurringTransactions(IEnumerable<RecurringTransaction> recurringTransactions)
     {
       foreach(var recurringTransaction in recurringTransactions)
@@ -24,11 +26,13 @@ namespace Sharkingbird.Jarvis.Core.Models
         var timeSpan = recurringTransaction.Rate.GetTimeSpan();
         while (!_transactions.Any(t => t.RecurringTransactionName == recurringTransaction.Name && t.AppliedOn + timeSpan <= DateTimeOffset.Now))
         {
-          IsModified = true;
+
           var lastTransaction = _transactions.OrderByDescending(t => t.AppliedOn).FirstOrDefault(t => t.RecurringTransactionName == recurringTransaction.Name);
           var newDate = lastTransaction?.AppliedOn + timeSpan ?? DateTimeOffset.Now;
 
-          _transactions.Add(new Transaction(Guid.NewGuid(), recurringTransaction.Amount, newDate, recurringTransaction.Name));
+          var newTransaction = new Transaction(Guid.NewGuid(), recurringTransaction.Amount, newDate, recurringTransaction.Name);
+          _newTransactions.Add(newTransaction);
+          _transactions.Add(newTransaction);
         }
       }
     }
