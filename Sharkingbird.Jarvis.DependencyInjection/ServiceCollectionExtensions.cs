@@ -25,6 +25,7 @@ namespace Sharkingbird.Jarvis.DependencyInjection
       var sqlOptions = collectionParam.BuildServiceProvider().GetRequiredService<IOptions<SqlConfiguration>>().Value;
 
       return collectionParam
+        .AddTransient<IBudgetRepository,BudgetRepository>()
         .AddDbContext<JarvisDbContext>(o =>
         {
           o.UseSqlServer(sqlOptions.JarvisSqlConnectionString);
