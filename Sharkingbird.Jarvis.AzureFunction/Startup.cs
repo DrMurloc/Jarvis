@@ -21,8 +21,7 @@ namespace Sharkingbird.Jarvis.AzureFunction
     public override void Configure(IFunctionsHostBuilder builder)
     {
       var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-      builder.Services.AddJarvisInfrastructure()
-        .AddJarvisApplication()
+      builder.Services
         .AddOptions<EmailConfiguration>()
         .Configure<IConfiguration>((settings, configuration) => { configuration.GetSection("Email").Bind(settings); })
         .Services
@@ -30,7 +29,10 @@ namespace Sharkingbird.Jarvis.AzureFunction
         .Configure<IConfiguration>((settings, configuration) => { configuration.GetSection("Twilio").Bind(settings); })
         .Services
         .AddOptions<SqlConfiguration>()
-        .Configure<IConfiguration>((settings, configuration) => { settings.JarvisSqlConnectionString = configuration.GetConnectionString("JarvisSql"); });
+        .Configure<IConfiguration>((settings, configuration) => { settings.JarvisSqlConnectionString = configuration.GetConnectionString("JarvisSql");})
+        .Services
+        .AddJarvisInfrastructure()
+        .AddJarvisApplication();
     }
   }
 }
