@@ -19,6 +19,11 @@ namespace Sharkingbird.Jarvis.Core.Models
     public IEnumerable<Transaction> NewTransactions => _newTransactions;
     public BudgetNameValueType Name { get;}
     public decimal Balance => _transactions.Sum(t => t.Amount);
+    public void ApplyTransaction(Transaction transaction)
+    {
+      _newTransactions.Add(transaction);
+      _transactions.Add(transaction);
+    }
     public void ApplyRecurringTransactions(IEnumerable<RecurringTransaction> recurringTransactions)
     {
       foreach(var recurringTransaction in recurringTransactions)
@@ -32,8 +37,7 @@ namespace Sharkingbird.Jarvis.Core.Models
           var newDate = lastTransaction?.AppliedOn + timeSpan ?? DateTimeOffset.Now;
 
           var newTransaction = new Transaction(Guid.NewGuid(), recurringTransaction.Amount, recurringTransaction.Name, newDate, recurringTransaction.Name);
-          _newTransactions.Add(newTransaction);
-          _transactions.Add(newTransaction);
+          ApplyTransaction(newTransaction);
         }
       }
     }

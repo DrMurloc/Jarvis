@@ -34,7 +34,7 @@ namespace Sharkingbird.Jarvis.Core.Application
           continue;
         }
         await _budgetRepository.SaveBudget(budget, cancellationToken);
-        await _mediator.Send(new TransactionsAppliedEvent(budget), cancellationToken);
+        await _mediator.Publish(new TransactionsAppliedEvent(budget), cancellationToken);
       }
       return Unit.Value;
     }
