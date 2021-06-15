@@ -8,4 +8,8 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sharkingbird.Jarvis.Core.Models\Sharkingbird.Jarvis.Core.Models.csproj" />
+  </ItemGroup>
+
 </Project>
