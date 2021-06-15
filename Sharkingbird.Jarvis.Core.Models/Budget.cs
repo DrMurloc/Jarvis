@@ -31,7 +31,7 @@ namespace Sharkingbird.Jarvis.Core.Models
           var lastTransaction = _transactions.OrderByDescending(t => t.AppliedOn).FirstOrDefault(t => t.RecurringTransactionName == recurringTransaction.Name);
           var newDate = lastTransaction?.AppliedOn + timeSpan ?? DateTimeOffset.Now;
 
-          var newTransaction = new Transaction(Guid.NewGuid(), recurringTransaction.Amount, newDate, recurringTransaction.Name);
+          var newTransaction = new Transaction(Guid.NewGuid(), recurringTransaction.Amount, recurringTransaction.Name, newDate, recurringTransaction.Name);
           _newTransactions.Add(newTransaction);
           _transactions.Add(newTransaction);
         }
