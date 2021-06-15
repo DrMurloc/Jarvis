@@ -19,7 +19,7 @@ namespace Sharkingbird.Jarvis.Core.Application
     }
     public async Task<Unit> Handle(ApplyRecurringTransactionsCommand request, CancellationToken cancellationToken)
     {
-      var recurringPayments = (await _transactionRepository.GetRecurringTransactionsByRate(cancellationToken)).ToArray();
+      var recurringPayments = (await _transactionRepository.GetRecurringTransactions(cancellationToken)).ToArray();
       var budgets = await _budgetRepository.GetBudgets(cancellationToken);
       foreach(var budget in budgets)
       {

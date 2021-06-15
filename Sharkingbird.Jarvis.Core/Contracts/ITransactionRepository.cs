@@ -11,9 +11,8 @@ namespace Sharkingbird.Jarvis.Core.Contracts
 {
   public interface ITransactionRepository
   {
-    Task<IEnumerable<RecurringTransaction>> GetRecurringTransactionsByRate(CancellationToken cancellationToken);
+    Task<IEnumerable<RecurringTransaction>> GetRecurringTransactions(CancellationToken cancellationToken);
     Task<IEnumerable<Transaction>> GetTransactionsByBudget(BudgetNameValueType budgetName, CancellationToken cancellationToken);
-    Task<IEnumerable<Transaction>> GetTransactions(CancellationToken cancellationToken);
-    Task SaveTransactions(IEnumerable<Transaction> transactions, CancellationToken cancellationToken);
+    Task SaveTransactions(BudgetNameValueType budgetName, IEnumerable<Transaction> transactions, CancellationToken cancellationToken);
   }
 }

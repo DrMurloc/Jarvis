@@ -57,7 +57,7 @@ namespace Sharkingbird.Jarvis.Infrastructure
       {
         return;
       }
-      await _transactionRepository.SaveTransactions(budget.NewTransactions, cancellationToken);
+      await _transactionRepository.SaveTransactions(budget.Name,budget.NewTransactions, cancellationToken);
     }
   }
 }

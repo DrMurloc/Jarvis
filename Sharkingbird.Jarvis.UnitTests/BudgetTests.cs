@@ -2,9 +2,7 @@
 using Sharkingbird.Jarvis.Core.Models;
 using Sharkingbird.Jarvis.Core.Models.Enums;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Sharkingbird.Jarvis.UnitTests
 {
@@ -48,7 +46,7 @@ namespace Sharkingbird.Jarvis.UnitTests
     {
 
       var budget = new Budget(budgetName, new[] {
-        new Transaction(Guid.NewGuid(),amount,DateTimeOffset.Now,recurringTransactionName)
+        new Transaction(Guid.NewGuid(),amount,"",DateTimeOffset.Now,recurringTransactionName)
       });
       var recurringTransaction = new RecurringTransaction(recurringTransactionName, budgetName, amount, rate);
       budget.ApplyRecurringTransactions(new[] { recurringTransaction });
@@ -65,7 +63,7 @@ namespace Sharkingbird.Jarvis.UnitTests
       var eightDaysAgo = DateTimeOffset.Now - TimeSpan.FromDays(8);
 
       var budget = new Budget(budgetName, new[] {
-        new Transaction(Guid.NewGuid(),amount,eightDaysAgo,recurringTransactionName)
+        new Transaction(Guid.NewGuid(),amount,"",eightDaysAgo,recurringTransactionName)
       });
 
       var recurringTransaction = new RecurringTransaction(recurringTransactionName, budgetName, amount, RecurringRateEnum.Weekly);
@@ -83,7 +81,7 @@ namespace Sharkingbird.Jarvis.UnitTests
       var fifteenDaysAgo = DateTimeOffset.Now - TimeSpan.FromDays(15);
 
       var budget = new Budget(budgetName, new[] {
-        new Transaction(Guid.NewGuid(),amount,fifteenDaysAgo,recurringTransactionName)
+        new Transaction(Guid.NewGuid(),amount,"",fifteenDaysAgo,recurringTransactionName)
       });
 
       var recurringTransaction = new RecurringTransaction(recurringTransactionName, budgetName, amount, RecurringRateEnum.Weekly);
