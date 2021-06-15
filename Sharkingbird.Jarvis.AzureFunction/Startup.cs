@@ -27,7 +27,10 @@ namespace Sharkingbird.Jarvis.AzureFunction
         .Configure<IConfiguration>((settings, configuration) => { configuration.GetSection("Email").Bind(settings); })
         .Services
         .AddOptions<TwilioConfiguration>()
-        .Configure<IConfiguration>((settings, configuration) => { configuration.GetSection("Twilio").Bind(settings); });
+        .Configure<IConfiguration>((settings, configuration) => { configuration.GetSection("Twilio").Bind(settings); })
+        .Services
+        .AddOptions<SqlConfiguration>()
+        .Configure<IConfiguration>((settings, configuration) => { settings.JarvisSqlConnectionString = configuration.GetConnectionString("JarvisSql"); });
     }
   }
 }

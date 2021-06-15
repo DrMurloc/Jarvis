@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Sharkingbird.Jarvis.Core.Application;
 using Sharkingbird.Jarvis.Core.Contracts;
 using Sharkingbird.Jarvis.Infrastructure;
+using Sharkingbird.Jarvis.Infrastructure.Configuration;
 using Sharkingbird.Jarvis.Infrastructure.Contracts;
 using Sharkingbird.Jarvis.Infrastructure.Infrastructure;
 using Sharkingbird.Jarvis.Infrastructure.RecurringPayments;
@@ -19,7 +22,13 @@ namespace Sharkingbird.Jarvis.DependencyInjection
       {
         collectionParam.AddTransient(typeof(IRecurringPaymentRepository), serviceType);
       }
+      var sqlOptions = collectionParam.BuildServiceProvider().GetRequiredService<IOptions<SqlConfiguration>>().Value;
+
       return collectionParam
+        .AddDbContext<JarvisDbContext>(o =>
+        {
+          o.UseSqlServer(sqlOptions.JarvisSqlConnectionString);
+        })
         .AddSingleton<IEmailService, EmailService>()
         .AddTransient<INotificationService,TwilioNotificationService>();
     }
