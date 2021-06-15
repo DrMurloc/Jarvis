@@ -24,7 +24,8 @@ namespace Sharkingbird.Jarvis.Core.Models
       foreach(var recurringTransaction in recurringTransactions)
       {
         var timeSpan = recurringTransaction.Rate.GetTimeSpan();
-        while (!_transactions.Any(t => t.RecurringTransactionName == recurringTransaction.Name && t.AppliedOn + timeSpan <= DateTimeOffset.Now))
+        var cutoffDate = DateTimeOffset.Now - timeSpan;
+        while (!_transactions.Any(t => t.RecurringTransactionName == recurringTransaction.Name && t.AppliedOn >= cutoffDate))
         {
 
           var lastTransaction = _transactions.OrderByDescending(t => t.AppliedOn).FirstOrDefault(t => t.RecurringTransactionName == recurringTransaction.Name);
