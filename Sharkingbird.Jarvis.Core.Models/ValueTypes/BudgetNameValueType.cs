@@ -16,7 +16,14 @@ namespace Sharkingbird.Jarvis.Core.Models.ValueTypes
     {
       return _nameParameter;
     }
-
+    public static implicit operator BudgetNameValueType?(string nameParam)
+    {
+      if (nameParam == null)
+      {
+        return null;
+      }
+      return From(nameParam);
+    }
     public static implicit operator BudgetNameValueType(string nameParam)
     {
       return From(nameParam);
