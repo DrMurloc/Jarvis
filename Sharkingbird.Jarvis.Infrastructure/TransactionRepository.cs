@@ -44,22 +44,26 @@ namespace Sharkingbird.Jarvis.Infrastructure
       var budgetId = (await _dbContext.Budget.FirstOrDefaultAsync(b => b.Name == budgetName.ToString(), cancellationToken)).Id;
       foreach(var transaction in transactions)
       {
-        var entity = _dbContext.Transaction.FirstOrDefaultAsync(t => t.Id == transaction.Id);
+        var entity = await _dbContext.Transaction.FirstOrDefaultAsync(t => t.Id == transaction.Id);
         if (entity == null)
         {
-          var recurringTransactionId = transaction.RecurringTransactionName == null ? null : (await _dbContext.RecurringTransaction.FirstOrDefaultAsync(t => t.Name == transaction.RecurringTransactionName.ToString(), cancellationToken))?.Id;
-          await _dbContext.Transaction.AddAsync(new TransactionEntity
+          entity = new TransactionEntity
           {
             Id = transaction.Id,
             Amount = transaction.Amount,
             AppliedOn = transaction.AppliedOn,
             Description = transaction.Description,
-            RecurringTransactionId = recurringTransactionId,
             BudgetId = budgetId
-          },cancellationToken);
-          await _dbContext.SaveChangesAsync(cancellationToken);
+          };
+          if(transaction.RecurringTransactionName!=null)
+          {
+            entity.RecurringTransactionId = (await _dbContext.RecurringTransaction.FirstAsync(t => t.Name == transaction.RecurringTransactionName.ToString(), cancellationToken)).Id;
+          }
+
+          await _dbContext.AddAsync(entity,cancellationToken);
         }
       }
+      await _dbContext.SaveChangesAsync(cancellationToken);
     }
   }
 }

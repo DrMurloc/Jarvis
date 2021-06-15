@@ -3,7 +3,7 @@ using System;
 
 namespace Sharkingbird.Jarvis.Core.Models.ValueTypes
 {
-  public sealed class BudgetNameValueType
+  public struct BudgetNameValueType
   {
     private readonly string _nameParameter;
 
