@@ -10,7 +10,7 @@ namespace Sharkingbird.Jarvis.Core.Models
       Amount = amountParam;
       ScheduledTime = scheduledTimeParam;
     }
-    public string SourceName { get; set; }
+    public string SourceName { get;}
     public DateTimeOffset ScheduledTime { get; }
     public double Amount { get; }
   }
