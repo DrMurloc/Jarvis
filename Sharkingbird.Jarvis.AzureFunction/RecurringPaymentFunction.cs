@@ -16,7 +16,7 @@ namespace Sharkingbird.Jarvis.AzureFunction
       _mediator = mediator;
     }
     [FunctionName("RecurringPayments")]
-    public async Task Run([TimerTrigger("0 0 0/1 * * * *")]TimerInfo myTimer, ILogger log)
+    public async Task Run([TimerTrigger("0 0 0/1 * * *")]TimerInfo myTimer, ILogger log)
     {
       await _mediator.Send(new ProcessRecurringPaymentsCommand());
     }
