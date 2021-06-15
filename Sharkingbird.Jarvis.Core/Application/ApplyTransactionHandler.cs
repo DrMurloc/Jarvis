@@ -22,7 +22,7 @@ namespace Sharkingbird.Jarvis.Core.Application
     public async Task<Unit> Handle(ApplyTransactionCommand request, CancellationToken cancellationToken)
     {
       var budget = await _budgetRepository.GetBudget(request.BudgetName, cancellationToken);
-      budget.ApplyTransaction(new Transaction(Guid.NewGuid(), request.Amount, request.Description, DateTimeOffset.Now, null);
+      budget.ApplyTransaction(new Transaction(Guid.NewGuid(), request.Amount, request.Description, DateTimeOffset.Now, null));
 
       await _budgetRepository.SaveBudget(budget, cancellationToken);
       await _mediator.Publish(new TransactionsAppliedEvent(budget), cancellationToken);
