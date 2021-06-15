@@ -29,7 +29,6 @@ namespace Sharkingbird.Jarvis.Infrastructure
       {
         budget = new BudgetEntity
         {
-          Balance = 0,
           Name = budgetName
         };
       }

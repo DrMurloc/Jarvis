@@ -13,7 +13,7 @@ namespace Sharkingbird.Jarvis.Infrastructure.Entities
     public Guid BudgetId { get; set; }
     public Guid? RecurringTransactionId { get; set; }
     [Required]
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
     [Required]
     public string Description { get; set; }
     [Required]

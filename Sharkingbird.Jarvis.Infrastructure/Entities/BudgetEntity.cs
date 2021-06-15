@@ -11,7 +11,5 @@ namespace Sharkingbird.Jarvis.Infrastructure.Entities
     public Guid Id { get; set; }
     [Required]
     public string Name { get; set; }
-    [Required]
-    public double Balance { get; set; }
   }
 }

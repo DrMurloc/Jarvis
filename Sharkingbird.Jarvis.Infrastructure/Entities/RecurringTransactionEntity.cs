@@ -14,7 +14,7 @@ namespace Sharkingbird.Jarvis.Infrastructure.Entities
     [Required]
     public Guid BudgetId { get; set; }
     [Required]
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
     [Required]
     public string Rate { get; set; }
   }

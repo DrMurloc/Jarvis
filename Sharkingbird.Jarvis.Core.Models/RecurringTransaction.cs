@@ -10,7 +10,7 @@ namespace Sharkingbird.Jarvis.Core.Models
   {
     public RecurringTransaction(RecurringTransactionNameValueType name,
       BudgetNameValueType budgetName,
-      double amount,
+      decimal amount,
       RecurringRateEnum rate)
     {
       Name = name;
@@ -20,7 +20,7 @@ namespace Sharkingbird.Jarvis.Core.Models
     }
     public RecurringTransactionNameValueType Name { get; }
     public BudgetNameValueType BudgetName { get; }
-    public double Amount { get; }
+    public decimal Amount { get; }
     
     public RecurringRateEnum Rate { get; }
   }

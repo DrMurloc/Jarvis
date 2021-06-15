@@ -18,7 +18,7 @@ namespace Sharkingbird.Jarvis.Core.Models
     private List<Transaction> _newTransactions;
     public IEnumerable<Transaction> NewTransactions => _newTransactions;
     public BudgetNameValueType Name { get;}
-    public double Balance => _transactions.Sum(t => t.Amount);
+    public decimal Balance => _transactions.Sum(t => t.Amount);
     public void ApplyRecurringTransactions(IEnumerable<RecurringTransaction> recurringTransactions)
     {
       foreach(var recurringTransaction in recurringTransactions)
