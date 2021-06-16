@@ -14,6 +14,7 @@ namespace Sharkingbird.Jarvis.AzureFunction
     public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
     {
       builder.ConfigurationBuilder
+        .AddJsonFile("appsettings.json",true)
         .AddEnvironmentVariables()
         .AddUserSecrets<Startup>(true);
     }
@@ -33,6 +34,9 @@ namespace Sharkingbird.Jarvis.AzureFunction
         .Services
         .AddOptions<LuisConfiguration>()
         .Configure<IConfiguration>((settings,configuration) => { configuration.GetSection("Luis").Bind(settings); })
+        .Services
+        .AddOptions<GoogleConfiguration>()
+        .Configure<IConfiguration>((settings,configuration) => { configuration.GetSection("Google").Bind(settings); })
         .Services
         .AddJarvisInfrastructure()
         .AddJarvisApplication();
