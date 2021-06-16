@@ -27,6 +27,7 @@ namespace Sharkingbird.Jarvis.DependencyInjection
       return collectionParam
         .AddTransient<IBudgetRepository,BudgetRepository>()
         .AddTransient<ITransactionRepository, TransactionRepository>()
+        .AddTransient<IIntentRepository,LuisIntentRepository>()
         .AddDbContext<JarvisDbContext>(o =>
         {
           o.UseSqlServer(sqlOptions.JarvisSqlConnectionString);

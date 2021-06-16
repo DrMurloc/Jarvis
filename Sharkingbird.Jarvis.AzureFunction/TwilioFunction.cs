@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Sharkingbird.Jarvis.Infrastructure.Configuration;
 using Twilio.Security;
+using Sharkingbird.Jarvis.Core.Contracts;
 
 namespace Sharkingbird.Jarvis.AzureFunction
 {
@@ -22,6 +23,7 @@ namespace Sharkingbird.Jarvis.AzureFunction
   {
     private readonly TwilioConfiguration _configuration;
     private readonly IMediator _mediator;
+    private readonly IIntentRepository _intentRepository;
     Regex _messageParser = new Regex(@"\s*([0-9\-\$\.]*)\s*(.*)", RegexOptions.Compiled);
     public TwilioFunction(IMediator mediator, IOptions<TwilioConfiguration> options)
     {
@@ -62,10 +64,9 @@ namespace Sharkingbird.Jarvis.AzureFunction
       }
 
       var message = bodyValues["Body"];
-      var parse = _messageParser.Match(message);
-      var amount = decimal.Parse(parse.Groups[1].Value.Replace("$",""));
-      var description = parse.Groups[2].Value.Trim();
-      await _mediator.Send(new ApplyTransactionCommand("BlueCard", description, amount));
+
+      var mediatorRequest = await _intentRepository.GetRequestFromIntent(message,request.HttpContext.RequestAborted);
+      await _mediator.Send(mediatorRequest,request.HttpContext.RequestAborted);
       return new OkResult();
     }
   }

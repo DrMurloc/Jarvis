@@ -31,6 +31,9 @@ namespace Sharkingbird.Jarvis.AzureFunction
         .AddOptions<SqlConfiguration>()
         .Configure<IConfiguration>((settings, configuration) => { settings.JarvisSqlConnectionString = configuration.GetConnectionString("JarvisSql");})
         .Services
+        .AddOptions<LuisConfiguration>()
+        .Configure<IConfiguration>((settings,configuration) => { configuration.GetSection("Luis").Bind(settings); })
+        .Services
         .AddJarvisInfrastructure()
         .AddJarvisApplication();
     }
