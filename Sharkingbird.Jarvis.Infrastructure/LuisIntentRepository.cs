@@ -38,7 +38,7 @@ namespace Sharkingbird.Jarvis.Infrastructure
     }
     private ApplyTransactionCommand GetApplyTransactionCommand(LuisResponseDto dto)
     {
-      var transaction = dto.Entities.Transaction.First();
+      var transaction = dto.Prediction.Entities.Transaction.First();
       var amount = -decimal.Parse(transaction.Amount.First());
       var budgetName = transaction.Budget.First();
       var description = transaction.Description.First();

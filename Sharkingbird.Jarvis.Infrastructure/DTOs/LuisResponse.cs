@@ -1,23 +1,23 @@
 ﻿namespace Sharkingbird.Jarvis.Infrastructure.DTOs
 {
-  internal sealed class LuisResponseDto
+  public sealed class LuisResponseDto
   {
-    internal IntentPredictionDto Prediction { get; set; }
-    internal EntityDto Entities { get; set; }
-    internal sealed class EntityDto
+    public IntentPredictionDto Prediction { get; set; }
+    public sealed class IntentPredictionDto
     {
-      internal TransactionDto[] Transaction { get; set; }
-
-      internal sealed class TransactionDto
+      public string TopIntent { get; set; }
+      public EntityDto Entities { get; set; }
+      public sealed class EntityDto
       {
-        internal string[] Amount { get; set; }
-        internal string[] Budget { get; set; }
-        internal string[] Description { get; set; }
+        public TransactionDto[] Transaction { get; set; }
+
+        public sealed class TransactionDto
+        {
+          public string[] Amount { get; set; }
+          public string[] Budget { get; set; }
+          public string[] Description { get; set; }
+        }
       }
-    }
-    internal sealed class IntentPredictionDto
-    {
-      internal string TopIntent { get; set; }
     }
   }
 }
