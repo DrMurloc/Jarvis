@@ -24,11 +24,11 @@ namespace Sharkingbird.Jarvis.AzureFunction
     private readonly TwilioConfiguration _configuration;
     private readonly IMediator _mediator;
     private readonly IIntentRepository _intentRepository;
-    Regex _messageParser = new Regex(@"\s*([0-9\-\$\.]*)\s*(.*)", RegexOptions.Compiled);
-    public TwilioFunction(IMediator mediator, IOptions<TwilioConfiguration> options)
+    public TwilioFunction(IMediator mediator, IOptions<TwilioConfiguration> options, IIntentRepository intentRepository)
     {
       _mediator = mediator;
       _configuration = options.Value;
+      _intentRepository = intentRepository;
     }
     private static IDictionary<string,string> ExtractTwilioBody(string body)
     {
