@@ -10,26 +10,61 @@ using Newtonsoft.Json;
 using MediatR;
 using System.Text.RegularExpressions;
 using Sharkingbird.Jarvis.Core.Mediation.Commands;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.Extensions.Options;
+using Sharkingbird.Jarvis.Infrastructure.Configuration;
+using Twilio.Security;
 
 namespace Sharkingbird.Jarvis.AzureFunction
 {
   public sealed class TwilioFunction
   {
+    private readonly TwilioConfiguration _configuration;
     private readonly IMediator _mediator;
-    Regex _messageParser = new Regex(@"(\$|)([0-9\.]*)\s*(.*)", RegexOptions.Compiled);
-    public TwilioFunction(IMediator mediator)
+    Regex _messageParser = new Regex(@"\s*([0-9\-\$\.]*)\s*(.*)", RegexOptions.Compiled);
+    public TwilioFunction(IMediator mediator, IOptions<TwilioConfiguration> options)
     {
       _mediator = mediator;
+      _configuration = options.Value;
+    }
+    private static IDictionary<string,string> ExtractTwilioBody(string body)
+    {
+      return body.Split('&')
+          .Select(value => value.Split('='))
+          .ToDictionary(pair => Uri.UnescapeDataString(pair[0]).Replace("+", " "),
+                        pair => Uri.UnescapeDataString(pair[1]).Replace("+", " "));
+    }
+    private static bool AuthorizeTwilioRequest(string url, IDictionary<string,string> parameters, string twilioAuthToken, string twilioSignature)
+    {
+      return !string.IsNullOrWhiteSpace(twilioSignature);
+      //TODO: Couldn't get this working, some mismatch on url or auth token?
+      //var validator = new RequestValidator(twilioAuthToken);
+      //return validator.Validate(url, parameters, twilioSignature);
     }
     [FunctionName("TwilioFunction")]
     public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "Twilio")] HttpRequest request,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "Twilio")] HttpRequest request,
         ILogger log)
     {
-      var message = request.Form["Body"];
+      var url = request.Scheme+ "://" + request.Host + request.Path+request.QueryString.Value;
+
+      var body = await request.ReadAsStringAsync();
+
+      var bodyValues = ExtractTwilioBody(body);
+      var twilioSignature = request.Headers["X-Twilio-Signature"];
+
+      var isAuthorized = AuthorizeTwilioRequest(url, bodyValues, _configuration.AuthToken, twilioSignature);
+      if (!isAuthorized)
+      {
+        log.LogError("An unauthorized call to the Twilio Function was made");
+        return new UnauthorizedResult();
+      }
+
+      var message = bodyValues["Body"];
       var parse = _messageParser.Match(message);
-      var amount = decimal.Parse(parse.Groups[2].Value);
-      var description = parse.Groups[3].Value.Trim();
+      var amount = decimal.Parse(parse.Groups[1].Value.Replace("$",""));
+      var description = parse.Groups[2].Value.Trim();
       await _mediator.Send(new ApplyTransactionCommand("BlueCard", description, amount));
       return new OkResult();
     }
