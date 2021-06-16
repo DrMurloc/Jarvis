@@ -66,6 +66,10 @@ namespace Sharkingbird.Jarvis.AzureFunction
       var message = bodyValues["Body"];
 
       var mediatorRequest = await _intentRepository.GetRequestFromIntent(message,request.HttpContext.RequestAborted);
+      if (mediatorRequest == null)
+      {
+        return new BadRequestResult();
+      }
       await _mediator.Send(mediatorRequest,request.HttpContext.RequestAborted);
       return new OkResult();
     }
