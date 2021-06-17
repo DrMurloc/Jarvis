@@ -9,6 +9,8 @@ using Sharkingbird.Jarvis.Infrastructure.Configuration;
 using Sharkingbird.Jarvis.Infrastructure.Contracts;
 using Sharkingbird.Jarvis.Infrastructure.Infrastructure;
 using Sharkingbird.Jarvis.Infrastructure.RecurringPayments;
+using Sharkingbird.Jarvis.Infrastructure.Repositories;
+using Sharkingbird.Jarvis.Infrastructure.Services;
 using System.Linq;
 
 namespace Sharkingbird.Jarvis.DependencyInjection
@@ -25,11 +27,11 @@ namespace Sharkingbird.Jarvis.DependencyInjection
       var sqlOptions = collectionParam.BuildServiceProvider().GetRequiredService<IOptions<SqlConfiguration>>().Value;
 
       return collectionParam
-        .AddTransient<IBudgetRepository, BudgetRepository>()
-        .AddTransient<ITransactionRepository, TransactionRepository>()
+        .AddTransient<IBudgetService,BudgetService>()
+        .AddTransient<IBudgetRepository,BudgetRepository>()
         .AddTransient<IIntentRepository, LuisIntentRepository>()
-        .AddTransient<ICalendarEventRepository, CalenderEventRepository>()
-        .AddTransient<IVacationRepository,VacationRepository>()
+        .AddTransient<IVacationRepository, VacationRepository>()
+        .AddTransient<ITransactionRepository,TransactionRepository>()
         .AddHttpClient()
         .AddDbContext<JarvisDbContext>(o =>
         {
@@ -41,7 +43,7 @@ namespace Sharkingbird.Jarvis.DependencyInjection
     public static IServiceCollection AddJarvisApplication(this IServiceCollection collectionParam)
     {
       return collectionParam
-        .AddMediatR(typeof(ProcessRecurringPaymentsHandler).Assembly);
+        .AddMediatR(typeof(ProcessRecurringPaymentsHandler).Assembly, typeof(TwilioNotificationService).Assembly);
     }
   }
 }

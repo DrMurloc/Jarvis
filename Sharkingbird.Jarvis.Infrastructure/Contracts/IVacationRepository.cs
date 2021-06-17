@@ -1,13 +1,11 @@
-﻿using Sharkingbird.Jarvis.Core.Models;
-using System;
+﻿using Sharkingbird.Jarvis.Core.Models.Vacation;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sharkingbird.Jarvis.Core.Contracts
+namespace Sharkingbird.Jarvis.Infrastructure.Contracts
 {
-  public interface ICalendarEventRepository
+  public interface IVacationRepository
   {
     Task<IEnumerable<Vacation>> GetUpcomingCalanderEvents(CancellationToken cancellationToken);
   }

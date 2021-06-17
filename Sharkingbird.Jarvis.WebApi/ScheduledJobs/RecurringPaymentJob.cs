@@ -1,12 +1,7 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Sharkingbird.Jarvis.Core.Mediation.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sharkingbird.Jarvis.WebApi.HostedServices

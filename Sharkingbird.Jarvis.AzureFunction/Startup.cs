@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Sharkingbird.Jarvis.AzureFunction;
 using Sharkingbird.Jarvis.DependencyInjection;
 using Sharkingbird.Jarvis.Infrastructure.Configuration;
-using System;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace Sharkingbird.Jarvis.AzureFunction

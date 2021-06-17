@@ -1,8 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Sharkingbird.Jarvis.Core.Mediation.Commands;
 

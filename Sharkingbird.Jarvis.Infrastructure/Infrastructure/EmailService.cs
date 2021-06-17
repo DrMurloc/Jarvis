@@ -5,9 +5,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using Sharkingbird.Jarvis.Infrastructure.Configuration;
 using Sharkingbird.Jarvis.Infrastructure.Contracts;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

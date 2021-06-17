@@ -2,9 +2,7 @@
 using Sharkingbird.Jarvis.Core.Contracts;
 using Sharkingbird.Jarvis.Core.Models;
 using Sharkingbird.Jarvis.Infrastructure.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Twilio;

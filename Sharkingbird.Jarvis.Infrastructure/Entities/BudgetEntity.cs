@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Sharkingbird.Jarvis.Infrastructure.Entities
 {
@@ -11,5 +9,9 @@ namespace Sharkingbird.Jarvis.Infrastructure.Entities
     public Guid Id { get; set; }
     [Required]
     public string Name { get; set; }
+    [Required]
+    public decimal Balance { get; set; }
+    [Required]
+    public decimal Allowance { get; set; }
   }
 }

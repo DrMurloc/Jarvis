@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MimeKit;
 using Sharkingbird.Jarvis.Core.Models;
 using Sharkingbird.Jarvis.Infrastructure.Abstractions;
-using Sharkingbird.Jarvis.Infrastructure.Configuration;
 using Sharkingbird.Jarvis.Infrastructure.Contracts;
 using System;
 using System.Text.RegularExpressions;

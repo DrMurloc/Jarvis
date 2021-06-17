@@ -1,16 +1,11 @@
-﻿using MailKit.Net.Imap;
-using MailKit.Search;
+﻿using MailKit.Search;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MimeKit;
-using Sharkingbird.Jarvis.Core;
 using Sharkingbird.Jarvis.Core.Contracts;
 using Sharkingbird.Jarvis.Core.Models;
-using Sharkingbird.Jarvis.Infrastructure.Configuration;
 using Sharkingbird.Jarvis.Infrastructure.Contracts;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 

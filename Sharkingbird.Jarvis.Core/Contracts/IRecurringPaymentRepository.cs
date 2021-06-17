@@ -1,5 +1,4 @@
-﻿using Sharkingbird.Jarvis.Core;
-using Sharkingbird.Jarvis.Core.Models;
+﻿using Sharkingbird.Jarvis.Core.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
