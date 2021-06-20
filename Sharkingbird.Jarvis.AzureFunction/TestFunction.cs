@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using MediatR;
 using Sharkingbird.Jarvis.Core.Contracts;
+using Sharkingbird.Jarvis.Core.Mediation.Commands;
 
 namespace Sharkingbird.Jarvis.AzureFunction
 {

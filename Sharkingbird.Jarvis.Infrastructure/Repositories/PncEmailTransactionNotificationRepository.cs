@@ -23,6 +23,7 @@ namespace Sharkingbird.Jarvis.Infrastructure.Repositories
       IOptions<AccountConfiguration> options)
     {
       _accountConfiguration = options.Value;
+      _emailService = emailService;
     }
 
     public async Task<IEnumerable<Transaction>> GetNewDiscretionaryTransactions(CancellationToken cancellationToken)
@@ -51,12 +52,16 @@ namespace Sharkingbird.Jarvis.Infrastructure.Repositories
     }
 
     private static readonly Regex AmountRegex =
-      new Regex(@"Transaction Amount.*[0-9\.]{1,}", RegexOptions.Compiled | RegexOptions.Singleline);
+      new Regex(@"Transaction Amount:[^0-9]*([0-9\.]{1,})", RegexOptions.Compiled | RegexOptions.Singleline);
 
+    private static readonly Regex DescriptionRegex =
+      new Regex(@"Merchant: \<\/b\> ([^\<]*) \<br\>", RegexOptions.Compiled | RegexOptions.Singleline);
     private Transaction GetTransactionFromEmail(MimeMessage message)
     {
-      var amount = AmountRegex.Match(message.HtmlBody);
-      return null;
+      var amount = AmountRegex.Match(message.HtmlBody).Groups[1].Value;
+      var description = DescriptionRegex.Match(message.HtmlBody).Groups[1].Value;
+
+      return new Transaction(Guid.NewGuid(),decimal.Parse(amount),description,message.Date);
     }
 
   }

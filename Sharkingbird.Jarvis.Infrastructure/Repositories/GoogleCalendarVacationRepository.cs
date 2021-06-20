@@ -56,7 +56,7 @@ namespace Sharkingbird.Jarvis.Infrastructure
         auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs",
         client_x509_cert_url = "https://www.googleapis.com/robot/v1/metadata/x509/" + Uri.EscapeUriString(_configuration.ClientEmail)
       };
-      var credentials = GoogleCredential.FromJson(JsonConvert.SerializeObject(credentialJson)).CreateScoped(new[] { CalendarService.Scope.Calendar });
+      var credentials = GoogleCredential.FromJson(JsonConvert.SerializeObject(credentialJson)).CreateScoped(new[] { CalendarService.Scope.Calendar, CalendarService.Scope.CalendarEvents });
 
       return _calendarService = new CalendarService(new BaseClientService.Initializer()
       {
@@ -73,9 +73,16 @@ namespace Sharkingbird.Jarvis.Infrastructure
     public async Task<IEnumerable<Vacation>> GetUpcomingCalanderEvents(CancellationToken cancellationToken)
     {
       var events = await GetCalanderEvents(cancellationToken);
-      return events.Select(i => new Vacation(_mediator, GetEventId(i), i.Summary, DateTimeOffset.Parse(i.Start.Date), DateTimeOffset.Parse(i.End.Date),GetExpensesFromDescription(i.Description))).ToArray();
+      return events.Select(GetVacationFromEvent).ToArray();
     }
     private static readonly Regex MoneyRegex = new Regex(@"[0-9\.]{1,}", RegexOptions.Compiled);
+
+    private Vacation GetVacationFromEvent(Event e)
+    {
+      return new Vacation(_mediator, GetEventId(e), e.Summary, DateTimeOffset.Parse(e.Start.Date??e.Start.DateTimeRaw),
+        DateTimeOffset.Parse(e.End.Date??e.End.DateTimeRaw), GetExpensesFromDescription(e.Description ?? ""));
+    }
+    
     private IEnumerable<VacationExpense> GetExpensesFromDescription(string description)
     {
       var lines = description.Split('\n');
@@ -112,8 +119,9 @@ namespace Sharkingbird.Jarvis.Infrastructure
       var description = string.Join("\n",
         notification.Vacation.Expenses.Select(e => $"{e.Name} => {e.Amount}{(e.IsPaid ? " (Paid)" : "")}"));
 
-      matchedEvent.Description = description;
-      await service.Events.Update(matchedEvent, _configuration.CalendarId, matchedEvent.Id).ExecuteAsync(cancellationToken);
+      matchedEvent.Description = description; 
+      var update = service.Events.Update(matchedEvent, _configuration.CalendarId, matchedEvent.Id);
+      await update.ExecuteAsync(cancellationToken);
     }
   }
 }

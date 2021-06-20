@@ -40,7 +40,7 @@ namespace Sharkingbird.Jarvis.Core.Models.Vacation
         CurrentVacation.AddTransactionsToExpenses(transactionsArray);
       }
 
-      AdjustBalance(transactionsArray.Sum(t => t.Amount));
+      AdjustBalance(-transactionsArray.Sum(t => t.Amount));
 
     }
     public decimal MonthlyAllowance { get; }

@@ -22,13 +22,18 @@ namespace Sharkingbird.Jarvis.Core.Models.Discretionary
 
     public void ApplyTransactions(IEnumerable<Transaction> transactions)
     {
-      foreach (var transaction in transactions)
+      var transactionArray = transactions.ToArray();
+      if (!transactionArray.Any())
+      {
+        return;
+      }
+      foreach (var transaction in transactionArray)
       {
         _transactions.Add(transaction);
         Balance -= transaction.Amount;
       }
 
-      _mediator.Publish(new TransactionsAppliedEvent(transactions)).Wait();
+      _mediator.Publish(new TransactionsAppliedEvent(transactionArray)).Wait();
       _mediator.Publish(new DiscretionaryBudgetBalanceModifiedEvent(Balance)).Wait();
     }
 
