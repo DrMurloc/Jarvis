@@ -10,6 +10,6 @@
     }
     public string Name { get; }
     public bool IsPaid { get; }
-    public decimal Amount { get; }
+    public decimal Amount { get; set; }
   }
 }

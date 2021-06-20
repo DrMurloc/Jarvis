@@ -32,6 +32,7 @@ namespace Sharkingbird.Jarvis.DependencyInjection
         .AddTransient<IIntentRepository, LuisIntentRepository>()
         .AddTransient<IVacationRepository, VacationRepository>()
         .AddTransient<ITransactionRepository,TransactionRepository>()
+        .AddTransient<ITransactionNotificationsRepository,PncEmailTransactionNotificationRepository>()
         .AddHttpClient()
         .AddDbContext<JarvisDbContext>(o =>
         {

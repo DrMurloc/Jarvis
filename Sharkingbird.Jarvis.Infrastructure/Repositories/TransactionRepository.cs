@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Sharkingbird.Jarvis.Infrastructure.Repositories
 {
   public sealed class TransactionRepository : ITransactionRepository,
-    INotificationHandler<TransactionAppliedEvent>
+    INotificationHandler<TransactionsAppliedEvent>
   {
     private readonly JarvisDbContext _dbContext;
     public TransactionRepository(JarvisDbContext dbContext)
@@ -25,17 +25,17 @@ namespace Sharkingbird.Jarvis.Infrastructure.Repositories
       return await _dbContext.Transaction.Select(t => new Transaction(t.Id, t.Amount, t.Description, t.AppliedOn)).ToArrayAsync(cancellationToken);
     }
 
-    public async Task Handle(TransactionAppliedEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(TransactionsAppliedEvent notification, CancellationToken cancellationToken)
     {
-      var transaction = notification.Transaction;
-      var newEntity = new TransactionEntity
+
+      var newEntities = notification.Transactions.Select(transaction => new TransactionEntity
       {
         Id = transaction.Id,
-        Amount=transaction.Amount,
+        Amount = transaction.Amount,
         AppliedOn = transaction.AppliedOn,
         Description = transaction.Description
-      };
-      await _dbContext.AddAsync(newEntity,cancellationToken);
+      });
+      await _dbContext.AddRangeAsync(newEntities,cancellationToken);
       await _dbContext.SaveChangesAsync(cancellationToken);
     }
   }

@@ -15,27 +15,40 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Apis.Calendar.v3.Data;
+using MediatR;
+using Sharkingbird.Jarvis.Core.Models.Events;
 
 namespace Sharkingbird.Jarvis.Infrastructure
 {
-  public sealed class VacationRepository : IVacationRepository
+  public sealed class VacationRepository : IVacationRepository,
+    INotificationHandler<VacationExpensesModifiedEvent>
   {
     private readonly GoogleConfiguration _configuration;
     private readonly ILogger<VacationRepository> _logger;
+    private readonly IMediator _mediator;
+    private CalendarService _calendarService;
     public VacationRepository(IOptions<GoogleConfiguration> options,
-      ILogger<VacationRepository> logger)
+      ILogger<VacationRepository> logger,
+      IMediator mediator)
     {
       _configuration = options.Value;
       _logger = logger;
+      _mediator = mediator;
     }
-    public async Task<IEnumerable<Vacation>> GetUpcomingCalanderEvents(CancellationToken cancellationToken)
+
+    private CalendarService BuildCalendarService()
     {
+      if (_calendarService != null)
+      {
+        return _calendarService;
+      }
       var credentialJson = new
       {
         type = "service_account",
         project_id = _configuration.ProjectId,
         private_key_id = _configuration.PrivateKeyId,
-        private_key = _configuration.PrivateKey.Replace("\\n","\n"),
+        private_key = _configuration.PrivateKey.Replace("\\n", "\n"),
         client_email = _configuration.ClientEmail,
         client_id = _configuration.ClientId,
         auth_uri = "https://accounts.google.com/o/oauth2/auth",
@@ -45,16 +58,22 @@ namespace Sharkingbird.Jarvis.Infrastructure
       };
       var credentials = GoogleCredential.FromJson(JsonConvert.SerializeObject(credentialJson)).CreateScoped(new[] { CalendarService.Scope.Calendar });
 
-      var service = new CalendarService(new BaseClientService.Initializer()
+      return _calendarService = new CalendarService(new BaseClientService.Initializer()
       {
         ApplicationName = "Sharkingbird Jarvis",
         HttpClientInitializer = credentials
       });
+    }
+    private async Task<IList<Event>> GetCalanderEvents(CancellationToken cancellationToken)
+    {
+      var service = BuildCalendarService();
       var eventRequest = service.Events.List(_configuration.CalendarId);
-      eventRequest.MaxResults = 10;
-      var result = await eventRequest.ExecuteAsync();
-      
-      return result.Items.Select(i => new Vacation(HashToGuid(i.Id), i.Summary, DateTimeOffset.Parse(i.Start.Date), DateTimeOffset.Parse(i.End.Date),GetExpensesFromDescription(i.Description))).ToArray();
+      return (await eventRequest.ExecuteAsync(cancellationToken)).Items;
+    }
+    public async Task<IEnumerable<Vacation>> GetUpcomingCalanderEvents(CancellationToken cancellationToken)
+    {
+      var events = await GetCalanderEvents(cancellationToken);
+      return events.Select(i => new Vacation(_mediator, GetEventId(i), i.Summary, DateTimeOffset.Parse(i.Start.Date), DateTimeOffset.Parse(i.End.Date),GetExpensesFromDescription(i.Description))).ToArray();
     }
     private static readonly Regex MoneyRegex = new Regex(@"[0-9\.]{1,}", RegexOptions.Compiled);
     private IEnumerable<VacationExpense> GetExpensesFromDescription(string description)
@@ -64,7 +83,7 @@ namespace Sharkingbird.Jarvis.Infrastructure
       {
         try
         {
-          var split = line.Split("-").Select(l => l.Trim()).ToArray();
+          var split = line.Split("=>").Select(l => l.Trim()).ToArray();
           var name = split[0];
           var amount = decimal.Parse(MoneyRegex.Match(split[1]).Value);
           var isPaid = split[1].Contains("paid", StringComparison.OrdinalIgnoreCase);
@@ -77,13 +96,24 @@ namespace Sharkingbird.Jarvis.Infrastructure
         }
       }).Where(v => v != null);
     }
-    private Guid HashToGuid(string input)
+    private Guid GetEventId(Event e)
     {
-      using (MD5 md5 = MD5.Create())
-      {
-        byte[] hash = md5.ComputeHash(Encoding.Default.GetBytes(input));
-        return new Guid(hash);
-      }
+      var id = e.Id;
+      using var md5 = MD5.Create();
+      var hash = md5.ComputeHash(Encoding.Default.GetBytes(id));
+      return new Guid(hash);
+    }
+
+    public async Task Handle(VacationExpensesModifiedEvent notification, CancellationToken cancellationToken)
+    {
+      var events = await GetCalanderEvents(cancellationToken);
+      var matchedEvent = events.Single(e => GetEventId(e) == notification.Vacation.Id);
+      var service = BuildCalendarService();
+      var description = string.Join("\n",
+        notification.Vacation.Expenses.Select(e => $"{e.Name} => {e.Amount}{(e.IsPaid ? " (Paid)" : "")}"));
+
+      matchedEvent.Description = description;
+      await service.Events.Update(matchedEvent, _configuration.CalendarId, matchedEvent.Id).ExecuteAsync(cancellationToken);
     }
   }
 }

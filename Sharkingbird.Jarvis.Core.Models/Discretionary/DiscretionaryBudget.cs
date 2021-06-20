@@ -19,14 +19,20 @@ namespace Sharkingbird.Jarvis.Core.Models.Discretionary
     private readonly IList<Transaction> _transactions;
     public IEnumerable<Transaction> Transactions => _transactions;
     public decimal Balance { get; private set; }
-    public void ApplyTransaction(Transaction transaction)
-    {
-      _transactions.Add(transaction);
-      Balance -= transaction.Amount;
 
-      _mediator.Publish(new TransactionAppliedEvent(transaction)).Wait();
+    public void ApplyTransactions(IEnumerable<Transaction> transactions)
+    {
+      foreach (var transaction in transactions)
+      {
+        _transactions.Add(transaction);
+        Balance -= transaction.Amount;
+      }
+
+      _mediator.Publish(new TransactionsAppliedEvent(transactions)).Wait();
       _mediator.Publish(new DiscretionaryBudgetBalanceModifiedEvent(Balance)).Wait();
     }
+
+    public void ApplyTransaction(Transaction transaction) => ApplyTransactions(new[] {transaction});
     public void ApplyAllowance()
     {
       Balance += WeeklyAllowance;
