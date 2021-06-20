@@ -28,10 +28,10 @@ namespace Sharkingbird.Jarvis.DependencyInjection
 
       return collectionParam
         .AddTransient<IBudgetService,BudgetService>()
-        .AddTransient<IBudgetRepository,BudgetRepository>()
+        .AddTransient<IBudgetRepository,SqlBudgetRepository>()
         .AddTransient<IIntentRepository, LuisIntentRepository>()
-        .AddTransient<IVacationRepository, VacationRepository>()
-        .AddTransient<ITransactionRepository,TransactionRepository>()
+        .AddTransient<IVacationRepository, GoogleCalendarVacationRepository>()
+        .AddTransient<ITransactionRepository,SqlTransactionRepository>()
         .AddTransient<ITransactionNotificationsRepository,PncEmailTransactionNotificationRepository>()
         .AddHttpClient()
         .AddDbContext<JarvisDbContext>(o =>
