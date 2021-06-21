@@ -33,10 +33,18 @@ namespace Sharkingbird.Jarvis.Infrastructure
       return dto.Prediction.TopIntent.ToLower() switch
       {
         "post transaction" => GetApplyTransactionCommand(dto),
+        "send projection" => GetSendProjectionCommand(dto),
         _ => null
       };
     }
-    private ApplyTransactionCommand GetApplyTransactionCommand(LuisResponseDto dto)
+
+    private static SendVacationBalanceProjectionCommand GetSendProjectionCommand(LuisResponseDto dto)
+    {
+      var dateTime = dto.Prediction.Entities.DatetimeV2.First().Values.First().Timex;
+      var predictionDate = DateTimeOffset.Parse(dateTime);
+      return new SendVacationBalanceProjectionCommand(predictionDate);
+    }
+    private static ApplyTransactionCommand GetApplyTransactionCommand(LuisResponseDto dto)
     {
       var transaction = dto.Prediction.Entities.Transaction.First();
       var amount = decimal.Parse(transaction.Amount.First());

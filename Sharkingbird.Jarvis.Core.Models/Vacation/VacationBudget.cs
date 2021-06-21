@@ -48,5 +48,16 @@ namespace Sharkingbird.Jarvis.Core.Models.Vacation
     {
       AdjustBalance(MonthlyAllowance);
     }
+
+    public decimal GetProjectedBalance(DateTimeOffset projectionDate)
+    {
+      var upcomingExpenses = Vacations
+        .Where(v => v.Start > DateTimeOffset.Now && v.Start <= projectionDate)
+        .SelectMany(v=>v.Expenses)
+        .Sum(e => e.Amount);
+      var monthsDifference = projectionDate.Month - DateTimeOffset.Now.Month +
+                             12 * (projectionDate.Year - DateTimeOffset.Now.Year);
+      return Balance + monthsDifference * MonthlyAllowance - upcomingExpenses;
+    }
   }
 }
