@@ -17,7 +17,7 @@ namespace Sharkingbird.Jarvis.AzureFunction
       _mediator = mediator;
     }
     [FunctionName("ImportTransactions")]
-    public async Task Run([TimerTrigger("0 0 9 * * *")] TimerInfo myTimer, ILogger log)
+    public async Task Run([TimerTrigger("0 30 9 * * *")] TimerInfo myTimer, ILogger log)
     {
       await _mediator.Send(new ImportNewTransactionsCommand());
     }
