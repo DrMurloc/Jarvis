@@ -24,7 +24,7 @@ namespace Sharkingbird.Jarvis.DependencyInjection
       {
         collectionParam.AddTransient(typeof(IRecurringPaymentRepository), serviceType);
       }
-      var sqlOptions = collectionParam.BuildServiceProvider().GetRequiredService<IOptions<SqlConfiguration>>().Value;
+      var cosmosOptions = collectionParam.BuildServiceProvider().GetRequiredService<IOptions<CosmosConfiguration>>().Value;
 
       return collectionParam
         .AddTransient<IBudgetService,BudgetService>()
@@ -36,7 +36,7 @@ namespace Sharkingbird.Jarvis.DependencyInjection
         .AddHttpClient()
         .AddDbContext<JarvisDbContext>(o =>
         {
-          o.UseSqlServer(sqlOptions.JarvisSqlConnectionString);
+          o.UseCosmos(cosmosOptions.AccountEndpoint,cosmosOptions.AccountKey,cosmosOptions.DatabaseName);
         })
         .AddSingleton<IEmailService, EmailService>()
         .AddTransient<INotificationService,TwilioNotificationService>();

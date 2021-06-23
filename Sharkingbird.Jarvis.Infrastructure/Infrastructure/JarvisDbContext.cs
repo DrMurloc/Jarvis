@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Sharkingbird.Jarvis.Infrastructure.Entities;
 
 namespace Sharkingbird.Jarvis.Infrastructure.Infrastructure
@@ -10,7 +11,12 @@ namespace Sharkingbird.Jarvis.Infrastructure.Infrastructure
     public DbSet<TransactionEntity> Transaction { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      modelBuilder.HasDefaultSchema("jarvis");
+      modelBuilder.Entity<BudgetEntity>().ToContainer("Budget")
+        .HasNoDiscriminator();
+
+      modelBuilder.Entity<TransactionEntity>().ToContainer("Transaction")
+        .HasNoDiscriminator();
+      
     }
   }
 }
