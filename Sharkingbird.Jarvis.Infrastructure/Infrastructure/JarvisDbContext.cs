@@ -12,10 +12,16 @@ namespace Sharkingbird.Jarvis.Infrastructure.Infrastructure
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.Entity<BudgetEntity>().ToContainer("Budget")
-        .HasNoDiscriminator();
+        .HasPartitionKey(m=>m.Id)
+        .HasNoDiscriminator()
+        .Property(m=>m.Id)
+        .HasConversion(g=>g.ToString(),s=>Guid.Parse(s));
 
       modelBuilder.Entity<TransactionEntity>().ToContainer("Transaction")
-        .HasNoDiscriminator();
+        .HasPartitionKey(m => m.Id)
+        .HasNoDiscriminator()
+        .Property(m => m.Id)
+        .HasConversion(g => g.ToString(), s => Guid.Parse(s)); ;
       
     }
   }
