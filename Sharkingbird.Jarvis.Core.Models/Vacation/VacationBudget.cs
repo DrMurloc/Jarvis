@@ -4,6 +4,7 @@ using Sharkingbird.Jarvis.Core.Models.Events;
 using System.Collections.Generic;
 using System.Linq;
 using Sharkingbird.Jarvis.Core.Models.Discretionary;
+using Sharkingbird.Jarvis.Core.Models.Helpers;
 
 namespace Sharkingbird.Jarvis.Core.Models.Vacation
 {
@@ -25,9 +26,8 @@ namespace Sharkingbird.Jarvis.Core.Models.Vacation
       _mediator.Publish(new VacationBudgetBalanceModifiedEvent(Balance));
     }
     public IEnumerable<Vacation> Vacations { get; }
-
     public Vacation CurrentVacation =>
-      Vacations.FirstOrDefault(v => v.Start <= DateTimeOffset.Now && DateTimeOffset.Now <= v.End);
+      Vacations.FirstOrDefault(v => v.Start.StartOfDay() <= DateTimeOffset.Now && DateTimeOffset.Now <= v.End.EndOfDay());
     public void AddTransactionsToExpenses(IEnumerable<Transaction> transactions)
     {
       var transactionsArray = transactions.ToArray();
