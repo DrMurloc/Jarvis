@@ -20,7 +20,7 @@ namespace Sharkingbird.Jarvis.AzureFunction
       _repo = repo;
     }
     [FunctionName("TestFunction")]
-    public async Task<IActionResult> Run(
+    public IActionResult Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "Test")] HttpRequest req)
     {
       return new JsonResult(new { });
