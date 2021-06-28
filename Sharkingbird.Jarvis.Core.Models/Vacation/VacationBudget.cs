@@ -26,6 +26,11 @@ namespace Sharkingbird.Jarvis.Core.Models.Vacation
       _mediator.Publish(new VacationBudgetBalanceModifiedEvent(Balance));
     }
     public IEnumerable<Vacation> Vacations { get; }
+    public Vacation GetVacationThatEndedYesterday()
+    {
+      var yesterday = DateTimeOffset.Now - TimeSpan.FromDays(1);
+      return Vacations.FirstOrDefault(v => v.End.Year == yesterday.Year && v.End.Month == yesterday.Month && v.End.Day == yesterday.Day);
+    }
     public Vacation CurrentVacation =>
       Vacations.FirstOrDefault(v => v.Start.StartOfDay() <= DateTimeOffset.Now && DateTimeOffset.Now <= v.End.EndOfDay());
     public void AddTransactionsToExpenses(IEnumerable<Transaction> transactions)

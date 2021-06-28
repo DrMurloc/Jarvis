@@ -26,7 +26,8 @@ namespace Sharkingbird.Jarvis.Core.Models.Vacation
     public DateTimeOffset End { get; }
     private IList<VacationExpense> _expenses;
     public IEnumerable<VacationExpense> Expenses => _expenses;
-
+    public decimal GetTotalExpenses(bool includeUnpaid)
+      => Expenses.Where(e => e.IsPaid || includeUnpaid).Sum(e => e.Amount);
     public void AddExpenses(IEnumerable<VacationExpense> vacationExpenses)
     {
       foreach (var expense in vacationExpenses)
