@@ -75,25 +75,43 @@ namespace Sharkingbird.Jarvis.Infrastructure
       var events = await GetCalanderEvents(cancellationToken);
       return events.Select(GetVacationFromEvent).ToArray();
     }
+    private const string DailyEstimateName = "Daily Estimate: ";
     private static readonly Regex MoneyRegex = new Regex(@"[0-9\.]{1,}", RegexOptions.Compiled);
-
+    private static readonly Regex PerDayRegex = new Regex(@"([0-9\.]{1,})\s*Per\s*Day", RegexOptions.Compiled);
     private Vacation GetVacationFromEvent(Event e)
     {
-      return new Vacation(_mediator, GetEventId(e), e.Summary, DateTimeOffset.Parse(e.Start.Date??e.Start.DateTimeRaw),
-        DateTimeOffset.Parse(e.End.Date??e.End.DateTimeRaw), GetExpensesFromDescription(e.Description ?? ""));
+      var startDate = DateTimeOffset.Parse(e.Start.Date ?? e.Start.DateTimeRaw);
+      var endDate = DateTimeOffset.Parse(e.End.Date ?? e.End.DateTimeRaw);
+      return new Vacation(_mediator, GetEventId(e), e.Summary, startDate,
+        endDate, GetExpensesFromDescription(startDate,endDate,e.Description ?? ""));
     }
     
-    private IEnumerable<VacationExpense> GetExpensesFromDescription(string description)
+    private IEnumerable<VacationExpense> GetExpensesFromDescription(DateTimeOffset startDate, DateTimeOffset endDate, string description)
     {
       var lines = description.Split('\n');
       return lines.Select(line =>
       {
         try
         {
-          var split = line.Split("=>").Select(l => l.Trim()).ToArray();
-          var name = split[0];
-          var amount = decimal.Parse(MoneyRegex.Match(split[1]).Value);
-          var isPaid = split[1].Contains("paid", StringComparison.OrdinalIgnoreCase);
+          string name;
+          decimal amount;
+          bool isPaid;
+          var perDayMatch = PerDayRegex.Match(line);
+          if (perDayMatch.Success)
+          {
+            var dailyAmount = decimal.Parse(perDayMatch.Groups[1].Value);
+            name = DailyEstimateName + dailyAmount;
+            isPaid = false;
+            var totalDays = (int) Math.Ceiling((endDate - startDate).TotalDays);
+            amount = dailyAmount * totalDays;
+          } else
+          {
+            var split = line.Split("=>").Select(l => l.Trim()).ToArray();
+            name = split[0];
+            amount = decimal.Parse(MoneyRegex.Match(split[1]).Value);
+            isPaid = split[1].Contains("paid", StringComparison.OrdinalIgnoreCase);
+          }
+
           return new VacationExpense(name, isPaid, amount);
         }
         catch (Exception e)
@@ -111,14 +129,29 @@ namespace Sharkingbird.Jarvis.Infrastructure
       return new Guid(hash);
     }
 
+    private string GetDescriptionFromExpenses(IEnumerable<VacationExpense> expenses)
+    {
+      var result = "";
+      foreach(var expense in expenses)
+      {
+        if(expense.Name.StartsWith(DailyEstimateName))
+        {
+          var moneyMatch = MoneyRegex.Match(expense.Name).Groups[0].Value;
+          result += moneyMatch + " Per Day";
+        }else
+        {
+          result += $"{expense.Name} => {expense.Amount}{(expense.IsPaid ? " (Paid)" : "")}";
+        }
+        result += "\n";
+      }
+      return result[0..^1];
+    }
     public async Task Handle(VacationExpensesModifiedEvent notification, CancellationToken cancellationToken)
     {
       var events = await GetCalanderEvents(cancellationToken);
       var matchedEvent = events.Single(e => GetEventId(e) == notification.Vacation.Id);
       var service = BuildCalendarService();
-      var description = string.Join("\n",
-        notification.Vacation.Expenses.Select(e => $"{e.Name} => {e.Amount}{(e.IsPaid ? " (Paid)" : "")}"));
-
+      var description = GetDescriptionFromExpenses(notification.Vacation.Expenses);
       matchedEvent.Description = description; 
       var update = service.Events.Update(matchedEvent, _configuration.CalendarId, matchedEvent.Id);
       await update.ExecuteAsync(cancellationToken);
