@@ -36,6 +36,10 @@ namespace Sharkingbird.Jarvis.Core.Models.Vacation
     public void AddTransactionsToExpenses(IEnumerable<Transaction> transactions)
     {
       var transactionsArray = transactions.ToArray();
+      if (!transactionsArray.Any())
+      {
+        return;
+      }
       if (CurrentVacation == null)
       {
         _mediator.Publish(new VacationTransactionsAppliedOutsideOfVacationEvent(transactionsArray)).Wait();
